@@ -556,46 +556,47 @@ module componente_booleano (A, B, f1, f0, Bmodif);
     and(op3_31, xor_op_31, f1, f0_neg);
     and(op4_31, not_a_31, f1, f0);
     or(Bmodif[31], op1_31, op2_31, op3_31, op4_31);
-
 endmodule
 
 
 module testbench;
     reg [31:0] A, B;
     reg f1, f0;
-    wire [31:0] Bmodif;
+    wire [31:0] S;
 
     // Instancia del módulo
-    componente_booleano uut (
-        .A(A),
-        .B(B),
-        .f1(f1),
-        .f0(f0),
-        .Bmodif(Bmodif)
-    );
+    componente_booleano uut (A,B,f1,f0,S);
 
     // Instancia del módulo
     initial begin
-    initial begin
-        A = 32'h00000000; // Ejemplo de A
-        B = 32'h00000000; // Ejemplo de B
+        A = 32'h00000039; // Ejemplo de A
+        B = 32'h00000001; // Ejemplo de B
 
         // Probar AND (00)
+        $display("AND Result: ");
         f1 = 0; f0 = 0;
         #10; // Esperar un tiempo para la simulación
-        $display("AND Result: %h", Bmodif);
 
         // Probar OR (01)
+        $display("OR Result: ");
         f1 = 0; f0 = 1;
-        #10;
-        $display("OR Result: %h", Bmodif);
-
+        #500;
+        
         // Probar XOR (10)
+        $display("XOR Result: ");
         f1 = 1; f0 = 0;
-        #10;
-        $display("XOR Result: %h", Bmodif);
+        #1000;
 
         // Finalizar la simulación
         $finish;
     end
+    initial $monitor("En %2t | %b%b%b%b %b%b%b%b %b%b%b%b %b%b%b%b %b%b%b%b %b%b%b%b %b%b%b%b %b%b%b%b",
+        $time,
+        S[31], S[30], S[29], S[28], S[27], S[26], S[25], S[24], S[23], S[22],
+        S[21], S[20], S[19], S[18], S[17], S[16], S[15], S[14], S[13], S[12],
+        S[11], S[10], S[9], S[8], S[7], S[6], S[5], S[4], S[3], S[2], S[1], S[0]
+    );
+
 endmodule
+//iverilog -o prueba BOOLEAN.v
+//vvp prueba
